@@ -346,8 +346,7 @@ int main()
                    "(4) Exit\n");
 
             scanf("%d", &choice);
-            while (getchar() != '\n')
-                ; // Clear the input buffer
+            while (getchar() != '\n'); // Clear the input buffer
 
             if (1 <= choice && 4 >= choice)
             {
