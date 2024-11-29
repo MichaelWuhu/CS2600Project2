@@ -3,20 +3,23 @@
 #include <string.h>
 #include <ctype.h>
 
-// function to count the exponents in a polynomial (the exponents tell us the number of 'terms' where something like '4x^2' is considered a 'term')
+// function to count the terms in a polynomial (the exponents tell us the number of 'terms' where something like '4x^2' is considered a 'term')
 int countTerms(char *polynomial)
 {
-    // this function will only count the exponents to see how big the array size should be
     int count = 0;
-    char *ptr = polynomial;
+    char s[1] = " ";
+    char polynomialCopy[256];
+    strcpy(polynomialCopy, polynomial);
+    char *token = strtok(polynomialCopy, s);
 
-    while (*ptr)
+    while (token != NULL)
     {
-        if (*ptr == '^')
+        printf(" %s\n", token);
+        if (strstr(token, "x^") != NULL)
         {
             count++;
         }
-        ptr++;
+        token = strtok(NULL, s);
     }
 
     return count;
@@ -28,6 +31,7 @@ void parsePolynomial(char *polynomial, int **coefficients, int **exponents, int 
     *coefficients = (int *)malloc(numTerms * sizeof(int)); // Allocate memory for coefficients
     *exponents = (int *)malloc(numTerms * sizeof(int));    // Allocate memory for exponents
 
+    printf("polynomial saldjksflka: %s\n\n\n\n", polynomial);
     char *ptr = polynomial; // Pointer to traverse the input string
 
     int termIndex = 0; // Index for the current term
@@ -228,18 +232,7 @@ void addPolynomials(char *resultPolynomial, int *coefficients1, int *exponents1,
                 pos += sprintf(resultPolynomial + pos, " - ");
                 resultCoefficients[i] = -resultCoefficients[i];
             }
-            if (i == 0)
-            {
-                pos += sprintf(resultPolynomial + pos, "%d", resultCoefficients[i]);
-            }
-            else if (i == 1)
-            {
-                pos += sprintf(resultPolynomial + pos, "%dx", resultCoefficients[i]);
-            }
-            else
-            {
-                pos += sprintf(resultPolynomial + pos, "%dx^%d", resultCoefficients[i], i);
-            }
+            pos += sprintf(resultPolynomial + pos, "%dx^%d", resultCoefficients[i], i);
         }
     }
 
@@ -302,18 +295,7 @@ void subtractPolynomials(char *resultPolynomial, int *coefficients1, int *expone
                 pos += sprintf(resultPolynomial + pos, " - ");
                 resultCoefficients[i] = -resultCoefficients[i];
             }
-            if (i == 0)
-            {
-                pos += sprintf(resultPolynomial + pos, "%d", resultCoefficients[i]);
-            }
-            else if (i == 1)
-            {
-                pos += sprintf(resultPolynomial + pos, "%dx", resultCoefficients[i]);
-            }
-            else
-            {
-                pos += sprintf(resultPolynomial + pos, "%dx^%d", resultCoefficients[i], i);
-            }
+            pos += sprintf(resultPolynomial + pos, "%dx^%d", resultCoefficients[i], i);
         }
     }
 
