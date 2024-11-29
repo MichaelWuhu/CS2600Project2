@@ -14,7 +14,7 @@ int countTerms(char *polynomial)
 
     while (token != NULL)
     {
-        printf(" %s\n", token);
+        // printf(" %s\n", token);
         if (strstr(token, "x^") != NULL)
         {
             count++;
@@ -31,7 +31,6 @@ void parsePolynomial(char *polynomial, int **coefficients, int **exponents, int 
     *coefficients = (int *)malloc(numTerms * sizeof(int)); // Allocate memory for coefficients
     *exponents = (int *)malloc(numTerms * sizeof(int));    // Allocate memory for exponents
 
-    printf("polynomial saldjksflka: %s\n\n\n\n", polynomial);
     char *ptr = polynomial; // Pointer to traverse the input string
 
     int termIndex = 0; // Index for the current term
@@ -227,6 +226,11 @@ void addPolynomials(char *resultPolynomial, int *coefficients1, int *exponents1,
             {
                 pos += sprintf(resultPolynomial + pos, " + ");
             }
+            else if (pos == 0 && resultCoefficients[i] < 0)
+            {
+                pos += sprintf(resultPolynomial + pos, " -");
+                resultCoefficients[i] = -resultCoefficients[i];
+            }
             else if (resultCoefficients[i] < 0)
             {
                 pos += sprintf(resultPolynomial + pos, " - ");
@@ -289,6 +293,11 @@ void subtractPolynomials(char *resultPolynomial, int *coefficients1, int *expone
             if (pos > 0 && resultCoefficients[i] > 0)
             {
                 pos += sprintf(resultPolynomial + pos, " + ");
+            }
+            else if (pos == 0 && resultCoefficients[i] < 0)
+            {
+                pos += sprintf(resultPolynomial + pos, " -");
+                resultCoefficients[i] = -resultCoefficients[i];
             }
             else if (resultCoefficients[i] < 0)
             {
