@@ -178,17 +178,22 @@ void enterPolynomials(char *polynomial1, char *polynomial2)
 }
 
 // function to add polynomials
-void addPolynomials(char* resultPolynomial, int *coefficients1, int *exponents1, int *coefficients2, int *exponents2, int numTerms1, int numTerms2) {
+void addPolynomials(char *resultPolynomial, int *coefficients1, int *exponents1, int *coefficients2, int *exponents2, int numTerms1, int numTerms2)
+{
     int maxExponent = 0;
 
     // Find the maximum exponent in both polynomials
-    for (int i = 0; i < numTerms1; i++) {
-        if (exponents1[i] > maxExponent) {
+    for (int i = 0; i < numTerms1; i++)
+    {
+        if (exponents1[i] > maxExponent)
+        {
             maxExponent = exponents1[i];
         }
     }
-    for (int i = 0; i < numTerms2; i++) {
-        if (exponents2[i] > maxExponent) {
+    for (int i = 0; i < numTerms2; i++)
+    {
+        if (exponents2[i] > maxExponent)
+        {
             maxExponent = exponents2[i];
         }
     }
@@ -197,33 +202,124 @@ void addPolynomials(char* resultPolynomial, int *coefficients1, int *exponents1,
     int *resultCoefficients = (int *)calloc(maxExponent + 1, sizeof(int));
 
     // Add coefficients of the first polynomial
-    for (int i = 0; i < numTerms1; i++) {
+    for (int i = 0; i < numTerms1; i++)
+    {
         resultCoefficients[exponents1[i]] += coefficients1[i];
     }
 
     // Add coefficients of the second polynomial
-    for (int i = 0; i < numTerms2; i++) {
+    for (int i = 0; i < numTerms2; i++)
+    {
         resultCoefficients[exponents2[i]] += coefficients2[i];
     }
 
     // Build the result polynomial string
     int pos = 0;
-    for (int i = maxExponent; i >= 0; i--) {
-        if (resultCoefficients[i] != 0) {
-            if (pos > 0 && resultCoefficients[i] > 0) {
+    for (int i = maxExponent; i >= 0; i--)
+    {
+        if (resultCoefficients[i] != 0)
+        {
+            if (pos > 0 && resultCoefficients[i] > 0)
+            {
                 pos += sprintf(resultPolynomial + pos, " + ");
-            } else if (resultCoefficients[i] < 0) {
+            }
+            else if (resultCoefficients[i] < 0)
+            {
                 pos += sprintf(resultPolynomial + pos, " - ");
                 resultCoefficients[i] = -resultCoefficients[i];
             }
-            if (i == 0) {
+            if (i == 0)
+            {
                 pos += sprintf(resultPolynomial + pos, "%d", resultCoefficients[i]);
-            } else if (i == 1) {
+            }
+            else if (i == 1)
+            {
                 pos += sprintf(resultPolynomial + pos, "%dx", resultCoefficients[i]);
-            } else {
+            }
+            else
+            {
                 pos += sprintf(resultPolynomial + pos, "%dx^%d", resultCoefficients[i], i);
             }
         }
+    }
+
+    if (pos == 0)
+    {
+        sprintf(resultPolynomial, "0");
+    }
+
+    free(resultCoefficients);
+}
+
+// function to subtract polynomials
+void subtractPolynomials(char *resultPolynomial, int *coefficients1, int *exponents1, int *coefficients2, int *exponents2, int numTerms1, int numTerms2)
+{
+    int maxExponent = 0;
+
+    // Find the maximum exponent in both polynomials
+    for (int i = 0; i < numTerms1; i++)
+    {
+        if (exponents1[i] > maxExponent)
+        {
+            maxExponent = exponents1[i];
+        }
+    }
+    for (int i = 0; i < numTerms2; i++)
+    {
+        if (exponents2[i] > maxExponent)
+        {
+            maxExponent = exponents2[i];
+        }
+    }
+
+    // Allocate memory for the result coefficients
+    int *resultCoefficients = (int *)calloc(maxExponent + 1, sizeof(int));
+
+    // Subtract coefficients of the first polynomial
+    for (int i = 0; i < numTerms1; i++)
+    {
+        resultCoefficients[exponents1[i]] += coefficients1[i];
+    }
+
+    // Subtract coefficients of the second polynomial
+    for (int i = 0; i < numTerms2; i++)
+    {
+        resultCoefficients[exponents2[i]] -= coefficients2[i];
+    }
+
+    // Build the result polynomial string
+    int pos = 0;
+    for (int i = maxExponent; i >= 0; i--)
+    {
+        if (resultCoefficients[i] != 0)
+        {
+            if (pos > 0 && resultCoefficients[i] > 0)
+            {
+                pos += sprintf(resultPolynomial + pos, " + ");
+            }
+            else if (resultCoefficients[i] < 0)
+            {
+                pos += sprintf(resultPolynomial + pos, " - ");
+                resultCoefficients[i] = -resultCoefficients[i];
+            }
+            if (i == 0)
+            {
+                pos += sprintf(resultPolynomial + pos, "%d", resultCoefficients[i]);
+            }
+            else if (i == 1)
+            {
+                pos += sprintf(resultPolynomial + pos, "%dx", resultCoefficients[i]);
+            }
+            else
+            {
+                pos += sprintf(resultPolynomial + pos, "%dx^%d", resultCoefficients[i], i);
+            }
+        }
+    }
+
+    if (pos == 0)
+    {
+        sprintf(resultPolynomial, "0");
     }
 
     free(resultCoefficients);
@@ -235,103 +331,84 @@ int main()
     int *coefficients1;
     int *exponents1;
     int numTerms1;
-    
+
     int *coefficients2;
     int *exponents2;
     int numTerms2;
-   
+
     char polynomial1[256] = "";
     char polynomial2[256] = "";
     char resultPolynomial[256] = "";
 
+    int exit = 0;
     int choice;
 
     // print menu, while loop to validate input
     while (1)
     {
-        printf("(1) Addition\n"
-               "(2) Subtraction\n"
-               "(3) Enter two new polynomials\n"
-               "(4) Exit\n");
+        while (1)
+        {
+            printf("\n"
+                   "(1) Addition\n"
+                   "(2) Subtraction\n"
+                   "(3) Enter two new polynomials\n"
+                   "(4) Exit\n");
 
-        scanf("%d", &choice);
-        while (getchar() != '\n')
-            ; // Clear the input buffer
+            scanf("%d", &choice);
+            while (getchar() != '\n')
+                ; // Clear the input buffer
 
-        if (1 <= choice && 4 >= choice)
+            if (1 <= choice && 4 >= choice)
+            {
+                break;
+            }
+            else
+            {
+                printf("Invalid choice. Please try again.\n\n");
+            }
+        }
+
+        // prompt for polynomials if they don't already exist
+        if (strlen(polynomial1) == 0 || strlen(polynomial2) == 0)
+        {
+            enterPolynomials(polynomial1, polynomial2);
+        }
+
+        numTerms1 = countTerms(polynomial1);
+        parsePolynomial(polynomial1, &coefficients1, &exponents1, numTerms1);
+
+        numTerms2 = countTerms(polynomial2);
+        parsePolynomial(polynomial2, &coefficients2, &exponents2, numTerms2);
+
+        switch (choice)
+        {
+        case 1:
+            // Add the two polynomials
+            printf("\nAdding the polynomials\n");
+            addPolynomials(resultPolynomial, coefficients1, exponents1, coefficients2, exponents2, numTerms1, numTerms2);
+            printf("Result: %s\n\n", resultPolynomial);
+            break;
+        case 2:
+            // Subtract the two polynomials
+            printf("\nSubtracting the polynomials\n");
+            subtractPolynomials(resultPolynomial, coefficients1, exponents1, coefficients2, exponents2, numTerms1, numTerms2);
+            printf("Result: %s\n\n", resultPolynomial);
+            break;
+        case 3:
+            // Enter two new polynomials
+            enterPolynomials(polynomial1, polynomial2);
+            break;
+        case 4:
+            // Exit the program
+            printf("\nExiting the program.\n");
+            exit = 1;
+            break;
+        }
+
+        if (exit)
         {
             break;
         }
-        else
-        {
-            printf("Invalid choice. Please try again.\n\n");
-        }
-    }
-
-    // prompt for polynomials if they don't already exist
-    if (strlen(polynomial1) == 0 || strlen(polynomial2) == 0)
-    {
-        enterPolynomials(polynomial1, polynomial2);
-    }
-
-    numTerms1 = countTerms(polynomial1);
-    parsePolynomial(polynomial1, &coefficients1, &exponents1, numTerms1);
-
-    numTerms2 = countTerms(polynomial2);
-    parsePolynomial(polynomial2, &coefficients2, &exponents2, numTerms2);
-
-//////////////////////////////////////
-    printf("polynomial 1:\n");
-    printf("Coefficients:\n");
-    for (int i = 0; i < numTerms1; i++)
-    {
-        printf("%d ", coefficients1[i]);
-    }
-    printf("Exponents:\n");
-    for (int i = 0; i < numTerms1; i++)
-    {
-        printf("%d ", exponents1[i]);
-    }
-    printf("\n");
-
-    printf("polynomial 2:\n");
-    printf("Coefficients:\n");
-    for (int i = 0; i < numTerms2; i++)
-    {
-        printf("%d ", coefficients2[i]);
-    }
-    printf("Exponents:\n");
-    for (int i = 0; i < numTerms2; i++)
-    {
-        printf("%d ", exponents2[i]);
-    }
-    printf("\n");
-////////////////////////////////////
-
-
-    // printf("polynomial1: %s\npolynomial2: %s\n\n", polynomial1, polynomial2);
-
-    switch (choice)
-    {
-    case 1:
-        // Add the two polynomials
-        printf("adding the polynomials");
-        addPolynomials(resultPolynomial, coefficients1, exponents1, coefficients2, exponents2, numTerms1, numTerms2);
-        printf("Result: %s", resultPolynomial);    
-        break;
-    case 2:
-        // Subtract the two polynomials
-        printf("subtracting the polynomials");
-        break;
-    case 3:
-        // Enter two new polynomials
-        printf("entering 2 new polynomials");
-        enterPolynomials(polynomial1, polynomial2);
-        break;
-    case 4:
-        // Exit the program
-        printf("exiting");
-        break;
     }
 
     free(coefficients1);
